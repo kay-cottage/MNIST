@@ -1,15 +1,16 @@
 #coding=utf-8
-
 import tensorflow as tf #导入tensorflow库
 from tensorflow.examples.tutorials.mnist import input_data
 import cv2
 import numpy as np
+
+
 def sigmoid_fun(x):
-    return 1/(1+np.exp(-x))########################定义函数将权重概率归一化
+    return 1/(1+np.exp(-x))########################定义sigmoid函数将权重概率归一化
+
+
 
 mnist = input_data.read_data_sets("MNIST_data", one_hot=True)#############################创建一个名字为mnis的文件夹
-
- 
 print("download ")
 tf.reset_default_graph()
 # tf Graph Input
@@ -50,16 +51,16 @@ logit = tf.matmul(tf.nn.sigmoid(logit0), W3) + b3########################tf.nn.s
 
 # Softmax分类
 pred = tf.nn.softmax(logit) 
-
 # Minimize error using cross entropy
 #cost = tf.reduce_mean(-tf.reduce_sum(y*tf.log(pred), reduction_indices=1))
 cost = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(labels=y,logits=logit))###########################损失函数作差平方
+
+
+
+
 #参数设置
 learning_rate = 9.10#################################################两层隐藏层，学习率0.5之间迭代10，一层隐藏层学习率1.0迭代25次左右
-##################################################################构建模型（起始段）
-########################################################下一句优化器梯度下降gradien....
 optimizer = tf.train.GradientDescentOptimizer(learning_rate).minimize(cost)#####################################梯度下降函数（参数=学习率）
-
 training_epochs = 35#####################################################每次训练都遍历完全部图片，遍历25次，epoch次数越多，准确性越高，准确性看loss
 batch_size = 300#########################每次输入100张,数字越大，速度越快，准确度下降
 display_step = 1#########################迭代1次输出结果
@@ -76,7 +77,6 @@ with tf.Session() as sess:
    
     # 启动循环开始训练
     for epoch in range(training_epochs):
-        
         avg_cost = 0.
         total_batch = int(mnist.train.num_examples/batch_size)
         # 遍历全部数据集
@@ -98,7 +98,6 @@ with tf.Session() as sess:
     # 计算准确率
     accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
     print ("Accuracy:", accuracy.eval({x: mnist.test.images, y: mnist.test.labels}))
-
     # Save model weights to disk
     save_path = saver.save(sess, model_path)
     print("Model saved in file: %s" % save_path)
@@ -151,35 +150,6 @@ with tf.Session() as sess:
 
 
 
-
-
-    
-    #print(sigmoid_fun(pred))
-    
-    
-    #output = tf.argmax(pred, 1)#####################################numpy argmax将pred输出最大值
-    
-    
-    #b =  mnist.test.images[20, :] # 冒号表示全选
-    #test_dict = {
-     #       x: b.reshape(1, 784)
-      #  }
-    
-    #pred2 = sess.run(logit, test_dict)
-    #print("0123456789的权重分别为：",pred2)
-
-#    print(outputval,predv,batch_ys)
-
-#    saver.save(sess=sess, save_path='./dense.ckpt')
-#
-#    im = batch_xs[0]
-#    im = im.reshape(-1,28)
-#    pylab.imshow(im)
-#    pylab.show()
-    
-    
-#    pylab.imshow(im)
-#    pylab.show()
  
 import cv2
 
